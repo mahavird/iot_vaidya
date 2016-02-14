@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="lib" path="lib-log/logback-classic-1.0.9.jar"/>
+	<classpathentry kind="lib" path="lib-log/slf4j-api-1.7.2.jar"/>
+	<classpathentry kind="lib" path="lib-log/logback-core-1.0.9.jar"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="no.ntnu.item.arctis.ARCTIS_RUNTIME_CONTAINER"/>
+	<classpathentry kind="con" path="no.ntnu.item.arctis.ARCTIS_DEPENDENCIES_CONTAINER"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="lib" path="lib-gen/pi4j-core.jar"/>
+	<classpathentry kind="src" path="/com.bitreactive.iotquickstart.iotfoundationquickstart_exe"/>
+	<classpathentry kind="lib" path="lib-gen/persistent-queue.jar"/>
+	<classpathentry kind="lib" path="lib-gen/bcprov-jdk15on-153.jar"/>
+	<classpathentry kind="lib" path="lib-gen/org.eclipse.paho.client.mqttv3-1.0.2.jar"/>
+	<classpathentry kind="lib" path="lib-gen/joda-time-2.0.jar"/>
+	<classpathentry kind="lib" path="lib-gen/bcpkix-jdk15on-153.jar"/>
+	<classpathentry kind="lib" path="lib-gen/gson-2.2.4.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

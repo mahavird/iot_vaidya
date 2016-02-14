@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<block
+    name="ADcIbmEvent" 
+    uuid="_ka728c_4EeWi3MpAdOD_fQ" 
+    status="under construction" 
+    type="system" 
+    >
+    <required>
+        <block name="b0" uuid="_dPVQUMyIEeSoJvnqXgsD0Q"/>
+        <block name="b1" uuid="_OrTikOpKEeSggMloHJNKsA"/>
+        <block name="b2" uuid="_L5BLsepLEeSggMloHJNKsA"/>
+    </required>
+</block>

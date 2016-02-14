@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    title="com.bitreactive.iotvaidyaadcevent.start"
+    uuid="_bCN0EM_4EeWi3MpAdOD_fQ"
+    version="1.0.0"
+    >
+    <dependencies>
+        <dependency name="com.bitreactive.library.buffering" uuid="_oelmQPDwEeCxK4vi80n1Xg" version="3.11.2" indirect="true"/>
+        <dependency name="com.bitreactive.library.flowlogic" uuid="_7oSlAN9rEeCpD8lO_Mt_YQ" version="1.13.0" indirect="true"/>
+        <dependency name="com.bitreactive.library.gson" uuid="_bCjFUFtTEeGtaPY7WHS-jQ" version="1.6.0" indirect="true"/>
+        <dependency name="com.bitreactive.library.mqtt" uuid="_iVDkMOJLEeGulKFN7xtCsw" version="2.12.7" indirect="true"/>
+        <dependency name="com.bitreactive.library.rpi.peripherals" uuid="_oD1SoEI5EeSjzInaK_U8RA" version="1.15.0"/>
+        <dependency name="com.bitreactive.library.timers" uuid="_b0djMBzFEeGAXOPaKszhRg" version="1.6.1" indirect="true"/>
+        <dependency name="org.reactiveblocks.ibmiot" uuid="_NEWPIMQnEeS9zLQpyJsfnA" version="1.1.0"/>
+    </dependencies>
+</project>

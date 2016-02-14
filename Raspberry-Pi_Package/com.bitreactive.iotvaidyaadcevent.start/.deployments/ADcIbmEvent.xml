@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment>
+        <mapping platform="Java Standard Edition (Into Source Project)">
+        <value name="loggingFramework" value="SLF4J and Logback"/>
+        <value name="loggingLevel" value="warning"/>
+    </mapping>
+</deployment>
