@@ -6,13 +6,13 @@ var multer = require('multer');
 //var btoa = require('btoa');   //photo --> string
 //var atob = require('atob');  //string --> photo
 var watson = require('watson-developer-cloud');
-/*
+
 var sinchAuth = require('sinch-auth');
 var sinchSms = require('sinch-messaging');
 var auth = sinchAuth("aecd746a-460e-4b04-8078-b5e1aab32910 ", "Smdg+GaSOkSgCEcJ+0DgFg==");
-*/
 
-var https = require('https');
+
+//var https = require('https');
 
 
 
@@ -43,14 +43,16 @@ var mongoose = require('mongoose');
 //var cfenv = require('cfenv');
 var app = express();
 var path = require("path");
+
+app.use(express.static(path.join(__dirname,'public')));
 //var port = process.env.PORT || 3000;
 app.use(bodyParser());
 
 var port = (process.env.VCAP_APP_PORT || 3000);
 var host = (process.env.VCAP_APP_HOST || 'localhost');
-/*
-var twilioSid = "AC581178cb6a95199205fe4c972de5587c";
-var twilioToken = "832de9e852927aa58e1ea962fa1ba78c";
+
+//var twilioSid = "AC581178cb6a95199205fe4c972de5587c";
+//var twilioToken = "832de9e852927aa58e1ea962fa1ba78c";
 /*
 var config = JSON.parse(process.env.VCAP_SERVICES);
 var twilioSid, twilioToken;
@@ -133,8 +135,66 @@ appClient.on("connect", function () {
 });
 appClient.on("deviceEvent", function (deviceType, deviceId, eventType, format, payload) {
     console.log("Device Event from : "+deviceType+" : "+deviceId+" of event "+eventType+" with payload : "+payload);
+
     var par = JSON.parse(payload);
     //var pay =  new patient(payload);
+  /*  if(par.pic_Id){
+      
+      var chunk = payload;
+    function reconstructBase64String(chunk) {
+ pChunk = JSON.parse(chunk["d"]);
+
+ //creates a new picture object if receiving a new picture, else adds incoming strings to an existing picture 
+ if (pictures[pChunk["pic_id"]]==null) {
+ pictures[pChunk["pic_id"]] = {"count":0, "total":pChunk["size"], pieces: {}, "pic_id": pChunk["pic_id"]};
+
+ pictures[pChunk["pic_id"]].pieces[pChunk["pos"]] = pChunk["data"];
+
+ }
+
+ else {
+ pictures[pChunk["pic_id"]].pieces[pChunk["pos"]] = pChunk["data"];
+ pictures[pChunk["pic_id"]].count += 1;
+
+
+ if (pictures[pChunk["pic_id"]].count == pictures[pChunk["pic_id"]].total) {
+ console.log("Image reception complete");
+ var str_image=""; 
+
+ for (var i = 0; i <= pictures[pChunk["pic_id"]].total; i++) 
+ str_image = str_image + pictures[pChunk["pic_id"]].pieces[i];
+
+// convert base64 string back to image 
+    base64_decode(str_image, './public/dist/img/patient/profile/Ujjwal.jpg');
+  
+ // function to create file from base64 encoded string
+function base64_decode(base64str, file) {
+    // create buffer object from base64 encoded string, it is important to tell the constructor that the string is base64 encoded
+    var bitmap = new Buffer(base64str, 'base64');
+    // write buffer to file
+    fs.writeFileSync(file, bitmap);
+    console.log('******** File created from base64 encoded string ********');
+}
+    
+
+   } 
+
+   
+ }
+}
+
+    }
+    else{
+      */
+    // function to create file from base64 encoded string
+function base64_decode(base64str, file) {
+    // create buffer object from base64 encoded string, it is important to tell the constructor that the string is base64 encoded
+    var bitmap = new Buffer(base64str, 'base64');
+    // write buffer to file
+    fs.writeFileSync(file, bitmap);
+    console.log('******** File created from base64 encoded string ********');
+}
+ 
     var pay = new patient({
       name : par.name,
       age : par.age,
@@ -145,15 +205,30 @@ appClient.on("deviceEvent", function (deviceType, deviceId, eventType, format, p
       ecg : par.ecg,
       gsr : par.gsr
 })
+    // convert base64 string to image 
+    base64_decode(par.photo, path.join(__dirname, 'public/dist/img/patient/profile/'+par.name+'.jpg'));
 
+/*
+    // function to create file from base64 encoded string
+function base64_decode(base64str, file) {
+    // create buffer object from base64 encoded string, it is important to tell the constructor that the string is base64 encoded
+    var bitmap = new Buffer(base64str, 'base64');
+    // write buffer to file
+    fs.writeFileSync(file, bitmap);
+    console.log('******** File created from base64 encoded string ********');
+}
+    // convert base64 string back to image 
+    base64_decode(par.image, './public/dist/img/patient/profile/Ujjwal.jpg');
+    
+*/
     pay.save(function(err){
     if ( err ) throw err;
     console.log("Patient's data Saved Successfully in DB");
   });
-
+//}
 });
 //mqtt end
-app.use(express.static(path.join(__dirname,'public')));
+
 
 app.get('/',function(req,res){
   res.sendFile(path.join(__dirname, 'public/pages/examples/login.html'));
@@ -266,7 +341,7 @@ app.post('/message', function (req, res) {
     request(t_url, function(err, resp, url_body) {
       var t = JSON.parse(url_body);
       var msg_translated = t.responseData.translatedText;
-      var data = JSON.stringify({
+     /* var data = JSON.stringify({
       api_key: "1a52938f",
       api_secret: "6cebea2a",
       to: "917507012952",
@@ -289,18 +364,20 @@ var re = https.request(options);
 
 re.write(data);
 re.end();
-      //sinchSms.sendMessage("+917507012952", msg_translated);
+*/
+      sinchSms.sendMessage("+917507012952", msg_translated);
       //console.log(sinchSms.getStatus("122725968"));
       //console.log(msg_translated);
       //console.log(number);
-    /*  client.sendMessage({     //twilio
+      /*client.sendMessage({     //twilio
         to:'+917507012952',
         from:'+12403770856',
         body:msg_translated
     }, function(err, message) {
         res.redirect("/");
     });
-*/  res.redirect("/");
+*/
+    res.redirect("/");
     });
 
 });//post
