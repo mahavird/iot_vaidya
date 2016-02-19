@@ -1,0 +1,11 @@
+applications:
+- path: .
+  memory: 256M
+  instances: 1
+  domain: mybluemix.net
+  name: iotvaidya
+  host: iotvaidya
+  disk_quota: 1024M
+  services:
+  - iotfservice
+  - messageme
