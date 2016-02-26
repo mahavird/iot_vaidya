@@ -1,0 +1,148 @@
+package com.heartrate.block.mcp3008adc;
+
+//HeartBeat Code
+
+import no.ntnu.item.arctis.runtime.Block;
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalInput;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.Pin;
+import com.pi4j.io.gpio.PinState;
+import com.pi4j.io.gpio.RaspiPin;
+
+public class MCP3008ADC extends Block 
+{
+	public MCP3008ADC.Parameters p;
+	private GpioPinDigitalOutput clockpin;
+	private GpioPinDigitalInput misopin;
+	private GpioPinDigitalOutput mosipin;
+	private GpioPinDigitalOutput cspin;
+	private byte channel;
+
+	public static enum RaspberryPiCSPin 
+	{
+		CE0(RaspiPin.GPIO_10), CE1(RaspiPin.GPIO_11);
+		private Pin pin;
+
+		RaspberryPiCSPin(Pin pin) 
+		{
+			this.pin = pin;
+		}
+
+		public Pin getPin() 
+		{
+			return pin;
+		}
+	}
+
+	public static enum MCP3008ADCChannel 
+	{
+		CH0(0), CH1(1), CH2(2), CH3(3), CH4(4), CH5(5), CH6(6), CH7(7);
+		private int ch;
+
+		MCP3008ADCChannel(int chNum) 
+		{
+			this.ch = chNum;
+		}
+
+		public int ch() 
+		{
+			return ch;
+		}
+	}
+
+	public static class Parameters 
+	{
+		public RaspberryPiCSPin chipSelectPin = RaspberryPiCSPin.CE0;
+		public MCP3008ADCChannel channel = MCP3008ADCChannel.CH0;
+		public int samplingIntervalInMs = 1000;
+		public int numOfSampleForAverage = 10;
+	}
+
+	public String init() 
+	{
+		try {
+			final GpioController Gpio = GpioFactory.getInstance();
+			clockpin = Gpio.provisionDigitalOutputPin(RaspiPin.GPIO_14, PinState.LOW);
+			misopin = Gpio.provisionDigitalInputPin(RaspiPin.GPIO_13);
+			mosipin = Gpio.provisionDigitalOutputPin(RaspiPin.GPIO_12, PinState.LOW);
+			cspin = Gpio.provisionDigitalOutputPin(p.chipSelectPin.pin, PinState.LOW);
+		}
+		catch (Throwable t) 
+		{
+			return "Error initializing SPI, are you on the right machine? " + t.toString();
+		}
+		channel = (byte) p.channel.ch;
+		logger.debug("MCDP3008ADC initialized, ch=" + channel);
+		return null;
+	}
+
+
+
+	public int[] read() 
+	{
+		//int sum = 0;
+		int[] sum = new int[10];
+		for (int i = 0; i < 10; i++) 
+		{
+			sum [i]= readOnce();
+		}
+		/*int[] sum = new int[10];
+		for (int i = 0; i < p.numOfSampleForAverage; i++) {
+			sum [i]= readOnce();
+		}
+		for (int i = 0; i < p.numOfSampleForAverage; i++) 
+		{
+			//sum [i]= readOnce();
+			System.out.print(sum[i] + " ");
+			logger.info("average: MCP3008 " + sum[i]);
+		}*/
+		//sum =  readOnce();
+		logger.info("MCP3008 " );
+		for (int i = 0; i < 10; i++) 
+		{
+			logger.info("MCP3008 value "+sum [i] );
+		}
+		return sum;
+	}
+
+	private int readOnce() 
+	{
+		cspin.high();
+		clockpin.low();
+		cspin.low();
+		int adccommand = channel;
+		adccommand |= 0x18;
+		adccommand <<= 3;
+		for (int i = 0; i < 5; i++) 
+		{
+			if ((adccommand & 0x80) != 0) 
+			{
+				mosipin.high();
+			} 
+			else 
+			{
+				mosipin.low();
+			}
+			adccommand <<= 1;
+			clockpin.high();
+			clockpin.low();
+		}
+		int adcout = 0;
+		for (int i = 0; i < 12; i++) 
+		{
+			clockpin.high();
+			clockpin.low();
+			adcout <<= 1;
+			if (misopin.isHigh()) 
+			{
+				adcout |= 0x1;
+			}
+		}
+		cspin.high();
+		adcout >>= 1;
+		logger.info("value: " + adcout);
+		return adcout;
+	}
+}
