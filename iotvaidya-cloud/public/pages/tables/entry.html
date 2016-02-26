@@ -57,20 +57,6 @@
                   <i class="fa fa-bell-o"></i>
                   <span id="notify-num"class="label label-warning"></span>
                 </a>
-                <ul class="dropdown-menu">
-                  <!--<li class="header">You have 10 notifications</li>-->
-                  <li>
-                    <!-- inner menu: contains the actual data -->
-                    <ul class="menu">
-                      <li>
-                        <a href="#">
-                          <i class="fa fa-users text-aqua"></i> New patients need you doc!
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <!--<li class="footer"><a href="#">View all</a></li>-->
-                </ul>
               </li>
               <!-- User Account: style can be found in dropdown.less -->
               <li class="dropdown user user-menu">
@@ -143,17 +129,6 @@
               <a id = "calender_src" href="">
                 <i class="fa fa-calendar"></i> <span>Calendar</span>
                 <!--<small class="label pull-right bg-red">3</small>-->
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <i class="fa fa-envelope"></i> <span>Mailbox</span>
-                <!--<small class="label pull-right bg-yellow">12</small>-->
-              </a>
-            </li>
-            <li class="treeview">
-              <a href="#">
-                <i class="fa fa-folder"></i> <span>Documents</span>
               </a>
             </li>
           </ul>
@@ -370,12 +345,8 @@ var data_set = [];
             { title : "Report"}
         ]
     });
-        /*
-        setInterval( function () {
-        table.ajax.reload();
-        }, 30000 );
-        */
-      },
+      }
+    ,
       error : function(jqXHR, text, status){
         console.log(text);
       }

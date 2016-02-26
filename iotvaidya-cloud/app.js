@@ -3,19 +3,13 @@ var bodyParser = require('body-parser');
 var fs = require('fs');
 var request = require('request');
 var multer = require('multer');
-//var btoa = require('btoa');   //photo --> string
-//var atob = require('atob');  //string --> photo
-var watson = require('watson-developer-cloud');
-
+var mongoose = require('mongoose');
+var path = require("path");
 var sinchAuth = require('sinch-auth');
 var sinchSms = require('sinch-messaging');
-var auth = sinchAuth("aecd746a-460e-4b04-8078-b5e1aab32910 ", "Smdg+GaSOkSgCEcJ+0DgFg==");
 
 
 //var https = require('https');
-
-
-
 /*
 var language_translation = watson.language_translation({
   username: "05b2ba96-ccc7-49f9-b8db-2211dd45c70a",
@@ -37,19 +31,23 @@ dialog.getDialogs({}, function (err, dialogs) {
 });
 */
 //var mqtt    = require('mqtt');
-var mongoose = require('mongoose');
+
 //var twilio = require('twilio');
-
 //var cfenv = require('cfenv');
+
 var app = express();
-var path = require("path");
-
-app.use(express.static(path.join(__dirname,'public')));
-//var port = process.env.PORT || 3000;
-app.use(bodyParser());
-
 var port = (process.env.VCAP_APP_PORT || 3000);
 var host = (process.env.VCAP_APP_HOST || 'localhost');
+
+app.use(express.static(path.join(__dirname,'public')));
+
+app.use(bodyParser());
+//app.use(bodyParser.json()); // support json encoded bodies
+//app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+
+var auth = sinchAuth("aecd746a-460e-4b04-8078-b5e1aab32910 ", "Smdg+GaSOkSgCEcJ+0DgFg==");
+
+
 
 //var twilioSid = "AC581178cb6a95199205fe4c972de5587c";
 //var twilioToken = "832de9e852927aa58e1ea962fa1ba78c";
@@ -66,7 +64,7 @@ config['user-provided'].forEach(function(service) {
 */
 
 // for your local testing
-dbURI = 'mongodb://arunkumar271:touchwood123@ds029804.mongolab.com:29804/mydb'
+
 /* 
 // for MongoDB by Compose service
 if (process.env.VCAP_SERVICES) {
@@ -84,6 +82,7 @@ if (process.env.VCAP_SERVICES) {
   }
 }
 */
+dbURI = 'mongodb://arunkumar271:touchwood123@ds029804.mongolab.com:29804/mydb'
 var db = mongoose.connection;
 db.on('disconnected', function() {
     console.log('disconnected');
@@ -137,65 +136,17 @@ appClient.on("deviceEvent", function (deviceType, deviceId, eventType, format, p
     console.log("Device Event from : "+deviceType+" : "+deviceId+" of event "+eventType+" with payload : "+payload);
 
     var par = JSON.parse(payload);
-    //var pay =  new patient(payload);
-  /*  if(par.pic_Id){
-      
-      var chunk = payload;
-    function reconstructBase64String(chunk) {
- pChunk = JSON.parse(chunk["d"]);
-
- //creates a new picture object if receiving a new picture, else adds incoming strings to an existing picture 
- if (pictures[pChunk["pic_id"]]==null) {
- pictures[pChunk["pic_id"]] = {"count":0, "total":pChunk["size"], pieces: {}, "pic_id": pChunk["pic_id"]};
-
- pictures[pChunk["pic_id"]].pieces[pChunk["pos"]] = pChunk["data"];
-
- }
-
- else {
- pictures[pChunk["pic_id"]].pieces[pChunk["pos"]] = pChunk["data"];
- pictures[pChunk["pic_id"]].count += 1;
-
-
- if (pictures[pChunk["pic_id"]].count == pictures[pChunk["pic_id"]].total) {
- console.log("Image reception complete");
- var str_image=""; 
-
- for (var i = 0; i <= pictures[pChunk["pic_id"]].total; i++) 
- str_image = str_image + pictures[pChunk["pic_id"]].pieces[i];
-
-// convert base64 string back to image 
-    base64_decode(str_image, './public/dist/img/patient/profile/Ujjwal.jpg');
-  
- // function to create file from base64 encoded string
-function base64_decode(base64str, file) {
-    // create buffer object from base64 encoded string, it is important to tell the constructor that the string is base64 encoded
-    var bitmap = new Buffer(base64str, 'base64');
-    // write buffer to file
-    fs.writeFileSync(file, bitmap);
-    console.log('******** File created from base64 encoded string ********');
-}
-    
-
-   } 
-
-   
- }
-}
-
-    }
-    else{
-      */
+/*   
     // function to create file from base64 encoded string
 function base64_decode(base64str, file) {
     // create buffer object from base64 encoded string, it is important to tell the constructor that the string is base64 encoded
     var bitmap = new Buffer(base64str, 'base64');
     // write buffer to file
     fs.writeFileSync(file, bitmap);
-    console.log('******** File created from base64 encoded string ********');
+    console.log('File created from base64 encoded string!');
 }
- 
-    var pay = new patient({
+*/
+      var pay = new patient({
       name : par.name,
       age : par.age,
       contact : par.contact,
@@ -206,21 +157,7 @@ function base64_decode(base64str, file) {
       gsr : par.gsr
 })
     // convert base64 string to image 
-    base64_decode(par.photo, path.join(__dirname, 'public/dist/img/patient/profile/'+par.name+'.jpg'));
-
-/*
-    // function to create file from base64 encoded string
-function base64_decode(base64str, file) {
-    // create buffer object from base64 encoded string, it is important to tell the constructor that the string is base64 encoded
-    var bitmap = new Buffer(base64str, 'base64');
-    // write buffer to file
-    fs.writeFileSync(file, bitmap);
-    console.log('******** File created from base64 encoded string ********');
-}
-    // convert base64 string back to image 
-    base64_decode(par.image, './public/dist/img/patient/profile/Ujjwal.jpg');
-    
-*/
+    //base64_decode(par.photo, path.join(__dirname, 'public/dist/img/patient/profile/'+par.name+'.jpg'));
     pay.save(function(err){
     if ( err ) throw err;
     console.log("Patient's data Saved Successfully in DB");
@@ -234,6 +171,88 @@ app.get('/',function(req,res){
   res.sendFile(path.join(__dirname, 'public/pages/examples/login.html'));
 });
 
+app.post('/imagepro',function(req,res){
+  //var xyz = JSON.parse(req.body);
+  //var js = JSON.stringify(req.body);
+
+  //console.log(req.body);
+  
+
+  var name = req.body.name;
+  var profile = req.body.photo1;
+
+  console.log(req.body);
+
+      // function to create file from base64 encoded string
+function base64_decode(base64str, file) {
+    // create buffer object from base64 encoded string, it is important to tell the constructor that the string is base64 encoded
+    var bitmap = new Buffer(base64str, 'base64');
+    // write buffer to file
+    fs.writeFileSync(file, bitmap);
+    console.log('File created from base64 encoded string!');
+}
+ // convert base64 string to image 
+    base64_decode(profile, path.join(__dirname, 'public/dist/img/patient/profile/'+name+'.jpg'));
+    //res.status(200).send("OK");
+   
+  res.status(200);
+});
+
+app.post('/imagesyma',function(req,res){
+  //var xyz = JSON.parse(req.body);
+  //var js = JSON.stringify(req.body);
+
+  //console.log(req.body);
+  
+
+  var name = req.body.name;
+  var sym1 = req.body.photo2;
+
+  console.log(req.body);
+
+      // function to create file from base64 encoded string
+function base64_decode(base64str, file) {
+    // create buffer object from base64 encoded string, it is important to tell the constructor that the string is base64 encoded
+    var bitmap = new Buffer(base64str, 'base64');
+    // write buffer to file
+    fs.writeFileSync(file, bitmap);
+    console.log('File created from base64 encoded string!');
+}
+ 
+    base64_decode(sym1, path.join(__dirname, 'public/dist/img/patient/symptom/'+name+'1.jpg'));
+
+    //res.status(200).send("OK");
+   
+  res.status(200);
+});
+
+app.post('/imagesymb',function(req,res){
+  //var xyz = JSON.parse(req.body);
+  //var js = JSON.stringify(req.body);
+
+  //console.log(req.body);
+  
+
+  var name = req.body.name;
+  var sym2 = req.body.photo3;
+
+  console.log(req.body);
+
+      // function to create file from base64 encoded string
+function base64_decode(base64str, file) {
+    // create buffer object from base64 encoded string, it is important to tell the constructor that the string is base64 encoded
+    var bitmap = new Buffer(base64str, 'base64');
+    // write buffer to file
+    fs.writeFileSync(file, bitmap);
+    console.log('File created from base64 encoded string!');
+}
+    base64_decode(sym2, path.join(__dirname, 'public/dist/img/patient/symptom/'+name+'2.jpg'));
+    //res.status(200).send("OK");
+   
+  res.status(200);
+});
+
+//for doctor
 var storage =   multer.diskStorage({
   destination: function (req, file, callback) {
     callback(null, './public/dist/img/doc/');
@@ -243,6 +262,7 @@ var storage =   multer.diskStorage({
   }
 });
 var upload = multer({ storage : storage}).single('imgupload');
+//doctor
 
 app.post('/register',function(req,res){
   //res.sendFile(path.join(__dirname, 'public/report.html'));

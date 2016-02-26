@@ -42,27 +42,6 @@
           </a>
           <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
-              <!-- Notifications: style can be found in dropdown.less -->
-              <li class="dropdown notifications-menu">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <i class="fa fa-bell-o"></i>
-                  <span id="notify-num" class="label label-warning"></span>
-                </a>
-                <ul class="dropdown-menu">
-                  <li class="header">You have 10 notifications</li>
-                  <li>
-                    <!-- inner menu: contains the actual data -->
-                    <ul class="menu">
-                      <li>
-                        <a href="#">
-                          <i class="fa fa-users text-aqua"></i> 5 new patients need you doc!
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li class="footer"><a href="#">View all</a></li>
-                </ul>
-              </li>
               <!-- User Account: style can be found in dropdown.less -->
               <li class="dropdown user user-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -136,20 +115,9 @@
               </a>
             </li>
             <li>
-              <a href="#">
+              <a id = "calender_src" href="">
                 <i class="fa fa-calendar"></i> <span>Calendar</span>
                 <!--<small class="label pull-right bg-red">3</small>-->
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <i class="fa fa-envelope"></i> <span>Mailbox</span>
-                <!--<small class="label pull-right bg-yellow">12</small>-->
-              </a>
-            </li>
-            <li class="treeview">
-              <a href="#">
-                <i class="fa fa-folder"></i> <span>Documents</span>
               </a>
             </li>
           </ul>
@@ -173,8 +141,8 @@
             <div class="col-md-3">
 
               <!-- Profile Image -->
-              <div class="box box-primary">
-                <div class="box-body box-profile">
+              <div class="box box-primary" >
+                <div class="box-body box-profile" >
                   <img id = "patient_img" class="profile-user-img img-responsive" src="" alt="User profile picture">
                   <h3 id = "patient_name" class="profile-username text-center"></h3>
 
@@ -205,10 +173,37 @@
                     <div class="post">
                       <div class='row margin-bottom'>
                         <div class='col-sm-6'>
-                          <img id="img1"class='img-responsive' src='' alt='Photo'>
+                          <!--<img id="img1"class='img-responsive' src='' alt='Photo'>-->
+              <div class="box box-info">
+                <div class="box-header with-border">
+                  <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                  </div>
+                </div>
+                <div class="box-body">
+                  <div class="chart">
+                    <!--<canvas id="ecg" style="height:250px"></canvas>-->
+                    <img id="img1"class='img-responsive' src='' style="height:250px"  onError="this.src='../../dist/img/patient/symptom/blank.png';">
+                  </div>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
                         </div><!-- /.col -->
                         <div class='col-sm-6'>
-                          <img id="img2" class='img-responsive' src='' alt='Photo'>
+                            <div class="box box-info">
+                <div class="box-header with-border">
+                  <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                  </div>
+                </div>
+                <div class="box-body">
+                  <div class="chart">
+                    <!--<canvas id="ecg" style="height:250px"></canvas>-->
+                    <img id="img2"class='img-responsive' src='' style="height:250px"  onError="this.src='../../dist/img/patient/symptom/blank.png';">
+                  </div>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
                         </div><!-- /.col -->
                       </div><!-- /.row -->
                     </div><!-- /.post -->
@@ -225,7 +220,7 @@
                       </div>
                   </form>
                 </div>
-                  </div><!-- /.tab-pane -->
+                </div><!-- /.tab-pane -->
                 </div><!-- /.tab-content -->
               </div><!-- /.nav-tabs-custom -->
             </div><!-- /.col -->
@@ -381,6 +376,8 @@
       var patient_img = document.getElementById('patient_img');
       patient_img.src="../../dist/img/patient/profile/"+ID+".jpg";
 
+      var calender_src = document.getElementById("calender_src");
+        calender_src.href = "../../pages/calendar.html?"+ID;
 
 
         
